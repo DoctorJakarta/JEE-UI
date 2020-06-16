@@ -1,0 +1,48 @@
+<h1>
+	JEE-102: My Books
+	<button (click)="showAdd()">Add Book</button>
+</h1>
+<div *ngIf=book>
+	<fieldset style='width: 100%'>
+		<legend>Book Details ({{book.id}}):</legend>
+		<form>
+			<label>Title: </label>
+			<input name="title" [(ngModel)]="book.title">
+			<br />
+			<label>Author: </label>
+			<input name="author" [(ngModel)]="book.author">
+			<br />
+			<label>Year: </label>
+			<input name="year" [(ngModel)]="book.year">
+			<br />
+			
+			<button (click)="upsertBook()">Save</button>
+
+		</form>
+    </fieldset> 
+</div>
+
+
+<div *ngIf=books>
+    <table cellspacing=20>
+		<tr>
+            <th></th>
+            <th>ID</th>
+            <th>Year</th>
+            <th>Author</th>
+            <th>Title</th>
+       </tr>
+		<tr *ngFor='let b of books;'>
+            <td align=center>
+				<button (click)="showEdit(b.id)">Edit</button>
+			</td>
+			<td align=right>{{b.id}}</td>
+            <td>{{b.year}}</td>
+			<td>{{b.author}}</td>
+			<td>{{b.title}}</td>
+             <td align=center>
+				<button (click)="deleteBook(b.id)">Delete</button>
+			</td>
+       </tr>
+	</table>
+</div>
