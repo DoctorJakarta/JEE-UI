@@ -1,1 +1,101 @@
-<p>jee103 works!</p>
+<button routerLink="/login/">{{ loggedIn ? 'Logout' : 'Login' }}</button>
+
+<h1>
+	JEE-103: My Books
+</h1>
+
+<div *ngIf=book>
+	<fieldset style='width: 100%'>
+		<legend>Book Details ({{book.id}}):</legend>
+		<form>
+			<label>Title: </label>
+			<input name="title" [(ngModel)]="book.title">
+			<br />
+			<label>Author: </label>
+			<input name="author" [(ngModel)]="book.author">
+			<br />
+			<label>Year: </label>
+			<input name="year" [(ngModel)]="book.year">
+			<br />
+			
+			<button (click)="upsertBook()">Save</button>
+
+		</form>
+    </fieldset> 
+</div>
+
+
+<fieldset>
+	<legend>Books: <button *ngIf=(loggedIn) (click)="showAddBook()">Add Book</button></legend>
+    <table cellspacing=20>
+		<tr>
+            <th></th>
+            <th>ID</th>
+            <th>Year</th>
+            <th>Author</th>
+            <th>Title</th>
+       </tr>
+		<tr *ngFor='let b of books;'>
+            <td align=center>
+				<button *ngIf=(loggedIn) (click)="showEditBook(b.id)">Edit</button>
+			</td>
+			<td align=right>{{b.id}}</td>
+            <td>{{b.year}}</td>
+			<td>{{b.author}}</td>
+			<td>{{b.title}}</td>
+             <td align=center>
+				<button *ngIf=(loggedIn) (click)="deleteBook(b.id)">Delete</button>
+			</td>
+       </tr>
+	</table>
+</fieldset>
+
+
+
+<div *ngIf=user>
+	<fieldset style='width: 100%'>
+		<legend>User Details ({{user.id}}):</legend>
+		<form>
+			<label>UserID: </label>
+			<input name="username" [(ngModel)]="user.username">
+			<br />
+			<label>Password: </label>
+			<input name="password" [(ngModel)]="user.password">
+			<br />
+			<label>Role: </label>
+				<select [(ngModel)]="user.role">
+					<option [value]='PUBLIC'>PUBLIC</option>
+					<option [value]='ADMIN'>ADMIN</option>
+				</select>
+			<br />
+			
+			<button (click)="upsertUser()">Save</button>
+
+		</form>
+    </fieldset> 
+</div>
+
+<fieldset *ngIf=isAdmin>
+	<legend>Users: 	<button (click)="showAddUser()">Add User</button></legend>
+    <table cellspacing=20>
+		<tr>
+            <th></th>
+            <th>ID</th>
+            <th>UserId</th>
+            <th>Role</th>
+       </tr>
+		<tr *ngFor='let u of users;'>
+            <td align=center>
+				<button *ngIf=(loggedIn) (click)="showEditUser(u.id)">Edit</button>
+			</td>
+			<td align=right>{{u.id}}</td>
+            <td>{{u.username}}</td>
+			<td>{{u.role}}</td>
+             <td align=center>
+				<button *ngIf=(loggedIn) (click)="deleteUser(u.id)">Delete</button>
+			</td>
+       </tr>
+	</table>
+</fieldset>
+
+

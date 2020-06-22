@@ -18,9 +18,9 @@ export class Jee101Component implements OnInit {
    }
 
   getGreeting() {
-    this._apiService.readGreeting().subscribe(
+    this._apiService.readGreeting101().subscribe(
       success => {
-         this.greeting = success.body;
+         this.greeting = success;
       },
       error => {
         alert('This greeting failed.');

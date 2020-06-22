@@ -1,6 +1,5 @@
 <h1>
 	JEE-102: My Books
-	<button (click)="showAdd()">Add Book</button>
 </h1>
 <div *ngIf=book>
 	<fieldset style='width: 100%'>
@@ -23,7 +22,8 @@
 </div>
 
 
-<div *ngIf=books>
+<fieldset *ngIf=books>
+	<legend>Books: <button (click)="showAddBook()">Add Book</button> </legend>
     <table cellspacing=20>
 		<tr>
             <th></th>
@@ -34,7 +34,7 @@
        </tr>
 		<tr *ngFor='let b of books;'>
             <td align=center>
-				<button (click)="showEdit(b.id)">Edit</button>
+				<button (click)="showEditBook(b.id)">Edit</button>
 			</td>
 			<td align=right>{{b.id}}</td>
             <td>{{b.year}}</td>
@@ -45,4 +45,4 @@
 			</td>
        </tr>
 	</table>
-</div>
+</fieldset>

@@ -6,21 +6,21 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { UserLoginComponent } from './components/user-login/user-login.component';
 import { Jee101Component } from './components/jee101/jee101.component';
 import { Jee102Component } from './components/jee102/jee102.component';
 import { Jee103Component } from './components/jee103/jee103.component';
 
 import { ApiService } from './services/api.service';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserLoginComponent,
     Jee101Component,
     Jee102Component,
-    Jee103Component
+    Jee103Component,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

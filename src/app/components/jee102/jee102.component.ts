@@ -23,7 +23,7 @@ export class Jee102Component {
     // newBook() { this.router.navigate(['book', PAGE_TYPE.NEW_BOOK]); }
 
      getBooks() {
-        this.apiService.readBooks().subscribe(
+        this.apiService.readBooks102().subscribe(
             success => {
                 this.books = success;
                 console.log('Got Books: ' + this.books);
@@ -32,12 +32,12 @@ export class Jee102Component {
         );
     }
 
-  showAdd() {
+  showAddBook() {
     this.book = new Book();
   }
-  showEdit(id: number) {
+  showEditBook(id: number) {
     console.log('Showing edit bookID: ' + id);
-    this.apiService.readBook(id).subscribe(
+    this.apiService.readBook102(id).subscribe(
       success => {
         this.book = success;
       },
@@ -48,8 +48,8 @@ export class Jee102Component {
 
   upsertBook() {
     let apiServieRequest;
-    if (this.book.id) { apiServieRequest = this.apiService.updateBook(this.book); }
-    else { apiServieRequest = this.apiService.createBook(this.book); }
+    if (this.book.id) { apiServieRequest = this.apiService.updateBook102(this.book); }
+    else { apiServieRequest = this.apiService.createBook102(this.book); }
 
     apiServieRequest.subscribe(
       success => {
@@ -62,7 +62,7 @@ export class Jee102Component {
 
   deleteBook(id: number) {
     if (confirm('Are you sure you want to delete the book?')) {
-      this.apiService.deleteBook(id).subscribe(
+      this.apiService.deleteBook102(id).subscribe(
         success => {
           this.getBooks();
         },
