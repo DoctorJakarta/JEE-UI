@@ -66,8 +66,9 @@
 			<br />
 			<label>Role: </label>
 				<select name="role" [(ngModel)]="user.role">
-					<option [value]='USER_ROLE.PUBLIC' selected>PUBLIC</option>
-					<option [value]='USER_ROLE.ADMIN'>ADMIN</option>
+					<option *ngFor="let r of getUserRoleKeys()" [value]='r' selected>{{userRoleNames.get(r)}}</option>
+					<!-- <option [value]='USER_ROLE.PUBLIC' selected>PUBLIC</option> -->
+					<!-- <option [value]='USER_ROLE.ADMIN'>ADMIN</option> -->
 				</select>
 			<br />
 			

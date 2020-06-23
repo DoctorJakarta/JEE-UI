@@ -9,10 +9,15 @@ const UserRoleNames = new Map<string, string>([
     [USER_ROLE.PUBLIC, 'Public']
 ]);
 
+
 export class User {
     public id: number;
     public username: string;
     public password: string;
-    public role: any;	// Comes from JSON binding as a string 'ADMIN', 'PUBLIC'
+    public role: any;	        // Comes from JSON binding as a string 'ADMIN', 'PUBLIC'
+
+    public static getUserRoleNames() {
+        return UserRoleNames;
+    }
 
 }

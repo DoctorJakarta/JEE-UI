@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Book } from 'src/app/model/book';
-import { User } from 'src/app/model/user';
+import { User, USER_ROLE  } from 'src/app/model/user';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-jee103',
@@ -14,8 +15,8 @@ export class Jee103Component {
   book: any;
   users: any;
   user: any;
-  USER_ROLE = User.USER_ROLE;
-  userRoleNames = User.UserRoleNames;
+  USER_ROLE = USER_ROLE;
+  userRoleNames = User.getUserRoleNames();
   loggedIn = false;
   isAdmin = true;
   showLogin = false;
@@ -75,6 +76,7 @@ export class Jee103Component {
 
   showAddUser() {
     this.user = new User();
+    this.user.role = USER_ROLE.PUBLIC;    // Set default option
   }
   showEditUser(id: number) {
     console.log('Showing edit bookID: ' + id);
