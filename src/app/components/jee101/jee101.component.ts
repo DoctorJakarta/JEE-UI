@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
-import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
+// import { CombineLatestOperator } from 'rxjs/internal/observable/combineLatest';
 
 @Component({
   selector: 'app-jee101',

@@ -1,7 +1,8 @@
-<button routerLink="/login/">{{ loggedIn ? 'Logout' : 'Login' }}</button>
+{{ currentUser ? 'Welcome ' + currentUser.username : ''}} 
+<button routerLink="/login/">{{ isLoggedIn() ? 'Logout' : 'Login' }}</button>
 
 <h1>
-	JEE-103: My Books
+	JEE-103: My Books 
 </h1>
 
 <div *ngIf=book>
@@ -26,8 +27,9 @@
 
 
 <fieldset>
-	<legend>Books: <button *ngIf=(loggedIn) (click)="showAddBook()">Add Book</button></legend>
-    <table cellspacing=20>
+	<legend>Books: <button  *ngIf="isLoggedIn()" (click)="showAddBook()">Add Book</button></legend>
+ 	{{ isLoggedIn() ? '' : 'Must Login to Add/Edit Books' }}
+   <table cellspacing=20>
 		<tr>
             <th></th>
             <th>ID</th>
@@ -37,14 +39,14 @@
        </tr>
 		<tr *ngFor='let b of books;'>
             <td align=center>
-				<button *ngIf=(loggedIn) (click)="showEditBook(b.id)">Edit</button>
+				<button *ngIf="isLoggedIn()" (click)="showEditBook(b.id)">Edit</button>
 			</td>
 			<td align=right>{{b.id}}</td>
             <td>{{b.year}}</td>
 			<td>{{b.author}}</td>
 			<td>{{b.title}}</td>
              <td align=center>
-				<button *ngIf=(loggedIn) (click)="deleteBook(b.id)">Delete</button>
+				<button *ngIf="isLoggedIn()" (click)="deleteBook(b.id)">Delete</button>
 			</td>
        </tr>
 	</table>
@@ -63,9 +65,9 @@
 			<input name="password" [(ngModel)]="user.password">
 			<br />
 			<label>Role: </label>
-				<select [(ngModel)]="user.role">
-					<option [value]='PUBLIC'>PUBLIC</option>
-					<option [value]='ADMIN'>ADMIN</option>
+				<select name="role" [(ngModel)]="user.role">
+					<option [value]='USER_ROLE.PUBLIC' selected>PUBLIC</option>
+					<option [value]='USER_ROLE.ADMIN'>ADMIN</option>
 				</select>
 			<br />
 			
@@ -76,7 +78,9 @@
 </div>
 
 <fieldset *ngIf=isAdmin>
-	<legend>Users: 	<button (click)="showAddUser()">Add User</button></legend>
+	<legend>Users: 	
+	<button *ngIf="isLoggedIn()" (click)="showAddUser()">Add User</button></legend>
+	{{ isLoggedIn() ? '' : 'Must Login to View Users' }}
     <table cellspacing=20>
 		<tr>
             <th></th>

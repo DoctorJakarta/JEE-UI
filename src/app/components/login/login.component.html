@@ -2,11 +2,10 @@
 		<legend>Login Form</legend>
 		<form>
 			<label>UserID: </label>
-			<input name="username" [(ngModel)]="user.username">
+			<input name="username" type=text [(ngModel)]="user.username">
 			<br />
 			<label>Password: </label>
-			<input name="password" [(ngModel)]="user.password">
-			
+			<input name="password" type=password [(ngModel)]="user.password">
 			<button (click)="login()">Login</button>
 
 		</form>

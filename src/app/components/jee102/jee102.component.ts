@@ -48,8 +48,11 @@ export class Jee102Component {
 
   upsertBook() {
     let apiServieRequest;
-    if (this.book.id) { apiServieRequest = this.apiService.updateBook102(this.book); }
-    else { apiServieRequest = this.apiService.createBook102(this.book); }
+    if (this.book.id) {
+      apiServieRequest = this.apiService.updateBook102(this.book);
+    } else {
+      apiServieRequest = this.apiService.createBook102(this.book);
+    }
 
     apiServieRequest.subscribe(
       success => {

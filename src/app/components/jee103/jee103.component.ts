@@ -14,22 +14,35 @@ export class Jee103Component {
   book: any;
   users: any;
   user: any;
+  USER_ROLE = User.USER_ROLE;
+  userRoleNames = User.UserRoleNames;
   loggedIn = false;
   isAdmin = true;
   showLogin = false;
+
+  currentUser: any;
 
   constructor(private apiService: ApiService) {
 
     this.books = this.getBooks();
     this.users = this.getUsers();
 
+    this.currentUser = apiService.getCurrentUser();
+  }
+
+  isLoggedIn() {
+    return (this.apiService.getCurrentUser() != null);
+  }
+
+  getUserRoleKeys() {
+    return Array.from(this.userRoleNames.keys());
   }
 
   getBooks() {
     this.apiService.readBooks103().subscribe(
       success => {
-        this.books = success;
-        console.log('Got Books: ' + this.books);
+        this.books = success.body;
+        this.apiService.updateJwt(success.headers);
       },
       error => this.apiService.handleError(error)
     );
@@ -38,8 +51,8 @@ export class Jee103Component {
   getUsers() {
     this.apiService.readUsers103().subscribe(
       success => {
-        this.users = success;
-        console.log('Got Users: ' + this.users);
+        this.users = success.body;
+        this.apiService.updateJwt(success.headers);
       },
       error => this.apiService.handleError(error)
     );
@@ -52,13 +65,14 @@ export class Jee103Component {
     console.log('Showing edit bookID: ' + id);
     this.apiService.readBook103(id).subscribe(
       success => {
-        this.book = success;
+        this.book = success.body;
+        this.apiService.updateJwt(success.headers);
       },
       error => this.apiService.handleError(error)
     );
   }
 
-  
+
   showAddUser() {
     this.user = new User();
   }
@@ -66,7 +80,8 @@ export class Jee103Component {
     console.log('Showing edit bookID: ' + id);
     this.apiService.readUser103(id).subscribe(
       success => {
-        this.user = success;
+        this.user = success.body;
+        this.apiService.updateJwt(success.headers);
       },
       error => this.apiService.handleError(error)
     );
@@ -74,11 +89,14 @@ export class Jee103Component {
 
 
   upsertBook() {
-    let apiServieRequest;
-    if (this.book.id) { apiServieRequest = this.apiService.updateBook103(this.book); }
-    else { apiServieRequest = this.apiService.createBook103(this.book); }
+    let apiServiceRequest;
+    if (this.book.id) {
+      apiServiceRequest = this.apiService.updateBook103(this.book);
+    } else {
+      apiServiceRequest = this.apiService.createBook103(this.book);
+    }
 
-    apiServieRequest.subscribe(
+    apiServiceRequest.subscribe(
       success => {
         this.getBooks();
         this.book = null;
@@ -99,11 +117,14 @@ export class Jee103Component {
   }
 
   upsertUser() {
-    let apiServieRequest;
-    if (this.user.id) { apiServieRequest = this.apiService.updateUser103(this.user); }
-    else { apiServieRequest = this.apiService.createUser103(this.user); }
+    let apiServiceRequest;
+    if (this.user.id) {
+      apiServiceRequest = this.apiService.updateUser103(this.user);
+    } else {
+      apiServiceRequest = this.apiService.createUser103(this.user);
+    }
 
-    apiServieRequest.subscribe(
+    apiServiceRequest.subscribe(
       success => {
         this.getUsers();
         this.user = null;

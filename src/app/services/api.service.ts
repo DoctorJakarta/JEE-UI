@@ -14,6 +14,7 @@ let service101: string;
 let service102: string;
 let service103: string;
 
+
 const headers102 = new HttpHeaders()
                         . set('Content-Type', 'application/json' );
 
@@ -22,37 +23,48 @@ const headers102 = new HttpHeaders()
   providedIn: 'root'
 })
 export class ApiService {
+  user: User;
 
-    jwtAccess: string;
+  JWT_ACCESS_HEADER = 'Jwt-Access';
+  TIMEOUT_HEADER = 'Timeout-Seconds';
 
-    constructor(private router: Router, private http: HttpClient) {
+  jwtAccess;
+  timeoutSeconds;
+
+  warnSecondsRemain = 60;
+  expSecondsRemain = this.warnSecondsRemain;
+  interval;
+
+
+  constructor( private router: Router, private http: HttpClient) {
 
     service101 = 'http://localhost:8080/JEE-101/api/v1.0/';
     service102 = 'http://localhost:8080/JEE-102/api/v1.0/';
     service103 = 'http://localhost:8080/JEE-103/api/v1.0/';
   }
 
-  isLoggedIn() {
-    if (this.jwtAccess) { return true; }
-    else { return false; }
-  }
+  //
+  // JEE-103 JWT Authentication services
+  // Note: Tried to move this to a JwtService, but that caused a circular dependency that broke initialization
+  //      ApiService called JwtService to get header
+  //      JwtService called ApiService to refresh jwt when called by the js prompt
+  //
 
-  getJwtAccess() {
-    if (!this.jwtAccess) { this.jwtAccess = localStorage.getItem(KEY_JWT_ACCESS); }
-    return this.jwtAccess;
-  }
-  
-  setJwtAccess(jwt: string) {
-    // console.log(">>>>>>>>>> ApiService.setJwtAccess with: " + jwt);
-    this.jwtAccess = jwt;
-    localStorage.setItem(KEY_JWT_ACCESS, jwt);
+  setCurrentUser(user: any) { this.user = user; }
+  getCurrentUser() { return this.user; }
+  isLoggedIn() {
+    if (this.jwtAccess) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getAuthzHeaders() {
 
         return new HttpHeaders()
           // .set('Content-Type', 'POST')  // This was necessary for OPTIONS request with HttpClient for CORS to avoid 403
-          .set('Authorization', 'Bearer ' + this.jwtAccess)
+          .set('Authorization', 'Bearer ' + this.getJwtAccess())
           .set('Content-Type', 'application/json');
 
   }
@@ -61,6 +73,72 @@ export class ApiService {
     console.log('Got API error status: ' + error.status);
     // Do something like this.router.navigate(['/error']);
   }
+
+
+
+  getJwtAccess() {
+    if (!this.jwtAccess) { this.jwtAccess = localStorage.getItem(KEY_JWT_ACCESS); }
+    return this.jwtAccess;
+  }
+
+  setJwtAccess(jwt: string) {
+    //console.log('>>>>>>>>>> ApiService.setJwtAccess with: ' + jwt);
+    this.jwtAccess = jwt;
+    localStorage.setItem(KEY_JWT_ACCESS, jwt);
+  }
+
+
+  getSecondsRemaining() { return this.expSecondsRemain; }
+
+  updateJwt(headers: HttpHeaders) {
+    let expSeconds = null;
+    let jwtAccess = null;
+    if (headers != null) {
+      expSeconds = headers.get(this.TIMEOUT_HEADER);
+      jwtAccess = headers.get(this.JWT_ACCESS_HEADER);
+    }
+
+    this.setJwtAccess(jwtAccess);
+
+    // console.log("Restarting Timer with expSeconds: " + expSeconds + " and jwtAccess: " + jwtAccess);
+
+    clearInterval(this.interval);
+    this.expSecondsRemain = 0;          // Clear time remaining for rest interval
+    this.interval = setInterval(() => {
+      if (this.expSecondsRemain > 0) {
+        this.expSecondsRemain--;
+        if ( this.expSecondsRemain%10 === 0 ) console.log( this.getSecondsRemaining() + ' seconds remaining.');
+      } else {
+        this.expSecondsRemain = expSeconds;
+      }
+      if (this.expSecondsRemain === this.warnSecondsRemain) {
+        const keepSession = confirm('Session timing out in ' + this.warnSecondsRemain + ' seconds.  Keep session alive?');
+
+        if (keepSession === true) {
+          console.log('Extending session...');
+          this.continueSession();
+        } else {
+          console.log('Not extending session...');
+          this.terminateSession();
+        }
+      }
+    }, 1000);
+  }
+
+  continueSession() {
+    this.refreshUser().subscribe(
+      success => {
+        this.updateJwt(success.headers);
+      },
+      err => this.handleError(err)
+    );
+  }
+
+  terminateSession() {
+      this.user = null;
+      this.updateJwt(null);
+  }
+
 
   //
   // JEE-101 Services
@@ -95,25 +173,30 @@ export class ApiService {
   }
 
 
-  
+
   //
   // Login/Logout/Refresh Services
   //
-  login(user: User) {
+  loginUser(user: User) {
     return this.http.post<Array<string>>(service103 + 'auth/login', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
   }
+  refreshUser() {
+    return this.http.get<Array<string>>(service103 + 'auth/refresh', { observe: 'response', headers: this.getAuthzHeaders() } );
+  }
+
 
 
   //
   // JEE-103 Authorized Book Services
+  //         Services now 'observe' which requires pulling the success.body and success.headers
   //
 
   readBooks103() {
-    return this.http.get<Array<string>>(service103 + 'book');
+    return this.http.get<Array<string>>(service103 + 'book', { observe: 'response', headers: this.getAuthzHeaders() });
   }
 
   readBook103(id: number) {
-    return this.http.get<Array<string>>(service103 + 'book/' + id);
+    return this.http.get<Array<string>>(service103 + 'book/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
   }
 
   createBook103(book: Book) {
@@ -128,17 +211,17 @@ export class ApiService {
     return this.http.delete<Array<string>>(service103 + 'authz/book/' + id, { observe: 'response', headers:  this.getAuthzHeaders()} );
   }
 
-  
+
   //
   // JEE-103 Authorized User Services
   //
 
   readUsers103() {
-    return this.http.get<Array<string>>(service103 + 'authz/user');
+    return this.http.get<Array<string>>(service103 + 'authz/user', { observe: 'response', headers: this.getAuthzHeaders() });
   }
 
   readUser103(id: number) {
-    return this.http.get<Array<string>>(service103 + 'authz/user/' + id);
+    return this.http.get<Array<string>>(service103 + 'authz/user/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
   }
 
   createUser103(user: User) {

@@ -3,6 +3,12 @@ export enum USER_ROLE {
     PUBLIC = 'PUBLIC'
 }
 
+const UserRoleNames = new Map<string, string>([
+    // These are the option display names
+    [USER_ROLE.ADMIN, 'Admin'],
+    [USER_ROLE.PUBLIC, 'Public']
+]);
+
 export class User {
     public id: number;
     public username: string;
