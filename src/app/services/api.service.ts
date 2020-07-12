@@ -13,6 +13,7 @@ const KEY_USERNAME = 'username';
 let service101: string;
 let service102: string;
 let service103: string;
+let service104: string;
 
 
 const headers102 = new HttpHeaders()
@@ -41,6 +42,7 @@ export class ApiService {
     service101 = 'http://localhost:8080/JEE-101/api/v1.0/';
     service102 = 'http://localhost:8080/JEE-102/api/v1.0/';
     service103 = 'http://localhost:8080/JEE-103/api/v1.0/';
+    service104 = 'http://localhost:8080/JEE-104/api/v1.0/';
   }
 
   //
@@ -173,66 +175,89 @@ export class ApiService {
   }
 
 
-
   //
-  // Login/Logout/Refresh Services
-  //
-  loginUser(user: User) {
-    return this.http.post<Array<string>>(service103 + 'auth/login', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
-  }
-  refreshUser() {
-    return this.http.get<Array<string>>(service103 + 'auth/refresh', { observe: 'response', headers: this.getAuthzHeaders() } );
-  }
-
-
-
-  //
-  // JEE-103 Authorized Book Services
-  //         Services now 'observe' which requires pulling the success.body and success.headers
-  //
-
-  readBooks103() {
-    return this.http.get<Array<string>>(service103 + 'book', { observe: 'response', headers: this.getAuthzHeaders() });
-  }
-
-  readBook103(id: number) {
-    return this.http.get<Array<string>>(service103 + 'book/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
-  }
-
-  createBook103(book: Book) {
-    return this.http.post<Array<string>>(service103 + 'authz/book', JSON.stringify(book), { observe: 'response', headers: this.getAuthzHeaders() } );
-  }
-
-  updateBook103(book: Book) {
-    return this.http.put<Array<string>>(service103 + 'authz/book', JSON.stringify(book), { observe: 'response', headers: this.getAuthzHeaders()} );
-  }
-
-  deleteBook103(id: number) {
-    return this.http.delete<Array<string>>(service103 + 'authz/book/' + id, { observe: 'response', headers:  this.getAuthzHeaders()} );
-  }
-
-
-  //
-  // JEE-103 Authorized User Services
+  // JEE-103 User Services
   //
 
   readUsers103() {
-    return this.http.get<Array<string>>(service103 + 'authz/user', { observe: 'response', headers: this.getAuthzHeaders() });
+    return this.http.get<Array<string>>(service103 + 'user', {headers: headers102} );
   }
 
   readUser103(id: number) {
-    return this.http.get<Array<string>>(service103 + 'authz/user/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
+    return this.http.get<Array<string>>(service103 + 'user/' + id, {headers: headers102} );
   }
 
   createUser103(user: User) {
-    return this.http.post<Array<string>>(service103 + 'authz/user', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
+    return this.http.post<Array<string>>(service103 + 'user', JSON.stringify(user), {headers: headers102} );
   }
 
-  updateUser103(user: User) {
-    return this.http.put<Array<string>>(service103 + 'authz/user', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders()} );
+
+  //
+  //  JEE-103 Login/Logout/Refresh Services
+  //
+  loginUser103(user: User) {
+    return this.http.post<Array<string>>(service103 + 'auth/login', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
   }
 
-  deleteUser103(id: number) {
-    return this.http.delete<Array<string>>(service103 + 'authz/user/' + id, { observe: 'response', headers:  this.getAuthzHeaders()} );
+
+
+  //
+  //  JEE-104 Login/Logout/Refresh Services
+  //
+  loginUser104(user: User) {
+    return this.http.post<Array<string>>(service104 + 'auth/login', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
+  }
+  refreshUser104() {
+    return this.http.get<Array<string>>(service104 + 'auth/refresh', { observe: 'response', headers: this.getAuthzHeaders() } );
+  }
+
+  //
+  // JEE-104 Authorized Book Services
+  //         Services now 'observe' which requires pulling the success.body and success.headers
+  //
+
+  readBooks104() {
+    return this.http.get<Array<string>>(service104 + 'book', { observe: 'response', headers: this.getAuthzHeaders() });
+  }
+
+  readBook104(id: number) {
+    return this.http.get<Array<string>>(service104 + 'book/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
+  }
+
+  createBook104(book: Book) {
+    return this.http.post<Array<string>>(service104 + 'authz/book', JSON.stringify(book), { observe: 'response', headers: this.getAuthzHeaders() } );
+  }
+
+  updateBook104(book: Book) {
+    return this.http.put<Array<string>>(service104 + 'authz/book', JSON.stringify(book), { observe: 'response', headers: this.getAuthzHeaders()} );
+  }
+
+  deleteBook104(id: number) {
+    return this.http.delete<Array<string>>(service104 + 'authz/book/' + id, { observe: 'response', headers:  this.getAuthzHeaders()} );
+  }
+
+
+  //
+  // JEE-104 Authorized User Services
+  //
+
+  readUsers104() {
+    return this.http.get<Array<string>>(service104 + 'authz/user', { observe: 'response', headers: this.getAuthzHeaders() });
+  }
+
+  readUser104(id: number) {
+    return this.http.get<Array<string>>(service104 + 'authz/user/' + id, { observe: 'response', headers: this.getAuthzHeaders() });
+  }
+
+  createUser104(user: User) {
+    return this.http.post<Array<string>>(service104 + 'authz/user', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders() } );
+  }
+
+  updateUser104(user: User) {
+    return this.http.put<Array<string>>(service104 + 'authz/user', JSON.stringify(user), { observe: 'response', headers: this.getAuthzHeaders()} );
+  }
+
+  deleteUser104(id: number) {
+    return this.http.delete<Array<string>>(service104 + 'authz/user/' + id, { observe: 'response', headers:  this.getAuthzHeaders()} );
   }
 }

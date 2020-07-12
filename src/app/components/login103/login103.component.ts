@@ -4,13 +4,15 @@ import { ApiService } from '../../services/api.service';
 import { User } from 'src/app/model/user';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-login103',
+  templateUrl: './login103.component.html',
+  styleUrls: ['./login103.component.css']
 })
-export class LoginComponent {
+export class Login103Component {
 
   user: any;
+  loggedIn = false;
+
 
   constructor(private apiService: ApiService, private router: Router) {
 
@@ -21,17 +23,15 @@ export class LoginComponent {
 
   login() {
 
-    this.apiService.loginUser(this.user).subscribe(
+    this.apiService.loginUser103(this.user).subscribe(
       success => {
-        // this.user = success.body;
-        this.apiService.setCurrentUser(success.body);
-        this.apiService.updateJwt(success.headers);
+        this.user = success.body;
+        this.loggedIn = true;
 
-        this.router.navigate(['/jee103/']);
+        this.router.navigate(['/login103/']);
       },
       error => this.apiService.handleError(error)
     );
   }
-
 
 }

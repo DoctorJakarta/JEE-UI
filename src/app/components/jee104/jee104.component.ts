@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Book } from 'src/app/model/book';
 import { User, USER_ROLE  } from 'src/app/model/user';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
-  selector: 'app-jee103',
-  templateUrl: './jee103.component.html',
-  styleUrls: ['./jee103.component.css']
+  selector: 'app-jee104',
+  templateUrl: './jee104.component.html',
+  styleUrls: ['./jee104.component.css']
 })
-export class Jee103Component {
+export class Jee104Component {
 
   books: any;
   book: any;
