@@ -128,7 +128,7 @@ export class ApiService {
   }
 
   continueSession() {
-    this.refreshUser().subscribe(
+    this.refreshUser104().subscribe(
       success => {
         this.updateJwt(success.headers);
       },
